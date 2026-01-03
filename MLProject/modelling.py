@@ -6,11 +6,16 @@ import numpy as np
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 
+from pathlib import Path
+import joblib
 
-X_train = joblib.load("amazon_preprocessing/X_train.pkl")
-X_test  = joblib.load("amazon_preprocessing/X_test.pkl")
-y_train = joblib.load("amazon_preprocessing/y_train.pkl")
-y_test  = joblib.load("amazon_preprocessing/y_test.pkl")
+BASE_DIR = Path(__file__).parent
+DATA_DIR = BASE_DIR / "amazon_preprocessing"
+
+X_train = joblib.load(DATA_DIR / "X_train.pkl")
+X_test  = joblib.load(DATA_DIR / "X_test.pkl")
+y_train = joblib.load(DATA_DIR / "y_train.pkl")
+y_test  = joblib.load(DATA_DIR / "y_test.pkl")
 
 mlflow.set_experiment("CI-Amazon-Rating")
 
