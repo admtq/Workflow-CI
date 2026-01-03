@@ -22,10 +22,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install mlflow==2.19.0
 
-    - name: Run MLflow Project
+    - name: Run modelling script (without conda)
+      env:
+        MLFLOW_CONDA_HOME: ""
       run: |
-        cd MLProject
-        mlflow run .
+        python MLProject/modelling.py
 
     - name: Build Docker Image from MLflow Model
       run: |
