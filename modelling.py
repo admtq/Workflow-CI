@@ -1,45 +1,27 @@
-from pathlib import Path
+import mlflow
+import mlflow.sklearn
 import joblib
 import numpy as np
 
-import mlflow
-import mlflow.sklearn
-
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
-BASE_DIR = Path(__file__).parent
-DATA_DIR = BASE_DIR / "amazon_preprocessing"
+mlflow.autolog()
 
-X_train = joblib.load(DATA_DIR / "X_train.pkl")
-X_test  = joblib.load(DATA_DIR / "X_test.pkl")
-y_train = joblib.load(DATA_DIR / "y_train.pkl")
-y_test  = joblib.load(DATA_DIR / "y_test.pkl")
+X_train = joblib.load("X_train.pkl")
+X_test  = joblib.load("X_test.pkl")
+y_train = joblib.load("y_train.pkl")
+y_test  = joblib.load("y_test.pkl")
 
-mlflow.set_tracking_uri("file:./mlruns")
-mlflow.set_experiment("CI-Amazon-Rating")
+model = RandomForestRegressor(
+    n_estimators=100,
+    random_state=42
+)
 
-with mlflow.start_run():
+model.fit(X_train, y_train)
 
-    model = RandomForestRegressor(
-        n_estimators=100,
-        random_state=42,
-        n_jobs=-1
-    )
+y_pred = model.predict(X_test)
 
-    model.fit(X_train, y_train)
-    preds = model.predict(X_test)
-
-    mse = mean_squared_error(y_test, preds)
-    rmse = np.sqrt(mse)
-
-    mlflow.log_metric("rmse", rmse)
-
-    mlflow.sklearn.log_model(
-        model,
-        artifact_path="model",
-        registered_model_name="amazon-rating-model",
-        input_example=X_train[:5]
-    )
-
-print("✅ Training & MLflow logging completed successfully")
+rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+mae  = mean_absolute_error(y_test, y_pred)
+r2   = r2_score(y_test, y_pred)
