@@ -25,12 +25,23 @@ jobs:
     - name: Run MLflow Project (Training)
       run: |
         mlflow run . --env-manager=local
+    
+    - name: Get latest MLflow run_id
+      run: |
+        RUN_ID=$(ls mlruns/* | grep -v models | head -n 1)
+        echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
 
-    - name: Build Docker Image from MLflow Model
+    - name: Build Docker Image from MLflow Run
       run: |
         mlflow models build-docker \
-          -m "models:/amazon-rating-ci/latest" \
+          -m "runs:/$RUN_ID/model" \
           -n amazon-rating-model
+
+    # - name: Build Docker Image from MLflow Model
+    #   run: |
+    #     mlflow models build-docker \
+    #       -m "models:/amazon-rating-ci/latest" \
+    #       -n amazon-rating-model
 
     - name: Login to Docker Hub
       run: |
