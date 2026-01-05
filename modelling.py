@@ -8,10 +8,10 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
 mlflow.autolog()
 
-X_train = joblib.load("X_train.pkl")
-X_test  = joblib.load("X_test.pkl")
-y_train = joblib.load("y_train.pkl")
-y_test  = joblib.load("y_test.pkl")
+X_train = joblib.load("amazon_preprocessing/X_train.pkl")
+X_test  = joblib.load("amazon_preprocessing/X_test.pkl")
+y_train = joblib.load("amazon_preprocessing/y_train.pkl")
+y_test  = joblib.load("amazon_preprocessing/y_test.pkl")
 
 model = RandomForestRegressor(
     n_estimators=100,
