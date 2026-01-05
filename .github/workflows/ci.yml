@@ -29,7 +29,7 @@ jobs:
     - name: Build Docker Image from MLflow Model
       run: |
         mlflow models build-docker \
-          -m "models:/amazon-rating/latest" \
+          -m "models:/amazon-rating-ci/latest" \
           -n amazon-rating-model
 
     - name: Login to Docker Hub
